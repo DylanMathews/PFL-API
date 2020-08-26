@@ -21,16 +21,16 @@ Account.validatePassword = password => {
 		return false
 	}
 }
-Account.hashPassword = (username, password) => {
+Account.hashPassword = (password) => {
 	const saltRounds = 10
 
-	return bcrypt.hashSync(`${username}:${password}`, saltRounds)
+	return bcrypt.hashSync(`${password}`, saltRounds)
 }
 
 
 Account.create = (username, password) => {
 	if (Account.validatePassword(password)) {
-		const account = Account.build({ username, passwordHash: Account.hashPassword(username, password)})
+		const account = Account.build({ username, passwordHash: Account.hashPassword(password)})
 		return account
 	} else {
 		throw new Error("Password is invalid.")
@@ -40,18 +40,23 @@ Account.create = (username, password) => {
 
 // Instance Methods
 Account.prototype.isCorrectPassword = password => {
-	const hash = Account.hashPassword(this.email, password)
+	const hash = Account.hashPassword(password)
 
 	return hash == this.passwordHash ? true : false
 }
 
 Account.prototype.changePassword = new_password => {
 	if (Account.validatePassword(new_password)) {
-		this.passwordHash = Account.hashPassword(this.email, new_password)
+		this.passwordHash = Account.hashPassword(new_password)
 	} else {
 		throw new Error("Password is invalid.")
 	}
 }
+
+Account.prototype.changeEmail = email => {
+	this.email = email
+}
+
 
 
 module.exports = Account
