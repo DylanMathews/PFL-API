@@ -37,7 +37,15 @@ Account.create = (username, password) => {
 	}
 }
 
+Account.find = async (username, password) => {
+	const user = Account.findOne({where: {email: username}})
 
+	if (user.isCorrectPassword(password)) {
+		return user
+	} else {
+		return false
+	}
+}
 // Instance Methods
 Account.prototype.isCorrectPassword = password => {
 	const hash = Account.hashPassword(password)
