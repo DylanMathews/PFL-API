@@ -1,3 +1,8 @@
+const User = require('./user')
+const Pokemon = require('./pokemon')
+const Account = require('./account')
+const Save = require('./Save')
+
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize({
 	dialect: "sqlite",
@@ -12,27 +17,6 @@ sequelize
 	.catch(err => {
 		console.error("Unable to connect to database.")
 	})
-
-const User = sequelize.define('user', {
-	firstName: Sequelize.TEXT,
-	lastName: Sequelize.TEXT
-})
-
-const Pokemon = sequelize.define('pokemon', {
-	trainerId: Sequelize.INTEGER,
-	species: Sequelize.TEXT,
-	level: Sequelize.INTEGER,
-	blob: Sequelize.BLOB
-})
-
-const Save = sequelize.define('save', {
-	raw: Sequelize.BLOB
-})
-
-const Account = sequelize.define('account', {
-	email: Sequelize.TEXT,
-	passwordHash: Sequelize.TEXT
-})
 
 User.hasOne(Account)
 User.hasMany(Pokemon)
